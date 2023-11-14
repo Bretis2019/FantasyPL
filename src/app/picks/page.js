@@ -1,4 +1,4 @@
-import PicksForm from "../../components/picksForm";
+import PicksCard from "../../components/PicksCard";
 
 /*function getLastWednesdayAndNextWeek() {
     const today = new Date();
@@ -29,9 +29,15 @@ export default async function Page(){
 
     const data = await response.json();
 
+    const elements = data.slice(0, 10).map((item, index) => {
+        return (
+            <PicksCard item={item} key={index}/>
+        )
+    })
+
     return (
-        <div>
-            <PicksForm data={data} />
+        <div className={"w-full bg-gradient-to-b from-green-300 via-blue-500 to-purple-600 p-4 flex flex-col gap-y-3 items-center"}>
+            {elements}
         </div>
     )
 }
