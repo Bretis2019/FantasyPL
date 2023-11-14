@@ -9,6 +9,14 @@ import PicksDisplay from "@/components/PicksDisplay";
 function Page(){
     const { user } = useAuthContext();
     const router = useRouter();
+
+    useEffect(() => {
+        if (user == null) {
+            router.push("/");
+        }
+    }, [user, router]);
+
+
     const [userData, setUserData] = useState({
     });
     useEffect(() => {
@@ -34,12 +42,6 @@ function Page(){
 
         fetchUserData();
     }, [user]);
-
-    useEffect(() => {
-        if (user == null) {
-            router.push("/");
-        }
-    }, [user, router]);
 
     return (
         <>
