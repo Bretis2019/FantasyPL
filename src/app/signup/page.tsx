@@ -24,8 +24,8 @@ function Page(): JSX.Element {
     // Sign up successful
     console.log( result );
 
-    // Redirect to the admin page
-    router.push( "/admin" );
+    // Redirect to the home page
+    router.push( "/username" );
   }
 
   return (

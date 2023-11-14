@@ -24,10 +24,10 @@ function Page(): JSX.Element {
     // Sign in successful
     console.log( result );
 
-    // Redirect to the admin page
-    // Typically you would want to redirect them to a protected page an add a check to see if they are admin or 
-    // create a new page for admin
-    router.push( "/admin" );
+    // Redirect to the home page
+    // Typically you would want to redirect them to a protected page an add a check to see if they are home or
+    // create a new page for home
+    router.push( "/home" );
   }
 
   return (
