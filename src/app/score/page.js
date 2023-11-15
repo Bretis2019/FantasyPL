@@ -2,7 +2,6 @@
 import {useAuthContext} from "../../context/AuthContext";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
-import {doc, getDoc, getFirestore} from "firebase/firestore";
 
 export default function Page(){
     const { user } = useAuthContext();

@@ -4,7 +4,7 @@ import {findGameId} from "../../../../functions/GamesDB";
 import {fetchUserData} from "../../../../functions/fetchUserData";
 import * as db from "@firebase/firestore";
 import {calculateScore} from "../../user/score/[uid]/route";
-import {collection, getDocs, setDoc, updateDoc} from "firebase/firestore"
+import {collection, getDocs, updateDoc} from "firebase/firestore"
 
 async function updateOdds(){
     try {

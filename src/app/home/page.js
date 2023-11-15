@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { getDoc, doc, getFirestore } from "firebase/firestore";
 import firebase_app from "@/firebase/config";
-import PicksDisplay from "@/components/PicksDisplay";
 
 function Page(){
     const { user } = useAuthContext();
