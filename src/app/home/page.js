@@ -9,13 +9,18 @@ import PicksDisplay from "@/components/PicksDisplay";
 function Page(){
     const { user } = useAuthContext();
     const router = useRouter();
+    const [score, setScore] = useState(null);
 
     useEffect(() => {
         if (user == null) {
             router.push("/");
         }
+        fetch(`/api/user/score/${user.uid}`)
+            .then(response => response.json())
+            .then(data => {
+                setScore(data);
+            })
     }, [user, router]);
-
 
     const [userData, setUserData] = useState({
     });
@@ -45,10 +50,9 @@ function Page(){
 
     return (
         <>
-            {userData.username ? (
+            {userData.picks ? (
                 <div>
-                    <h1>Welcome, {userData.username}!</h1>
-                    <PicksDisplay picks={userData.picks}/>
+                    <h1>Welcome, {userData.username}! You have {score} point this week</h1>
                 </div>
             ) : (
                 <h1>Loading user data...</h1>

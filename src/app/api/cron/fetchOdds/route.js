@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import * as fs from "fs";
 import {findGameId} from "../../../../functions/GamesDB";
+import {fetchUserData} from "../../../../functions/fetchUserData";
+import * as db from "@firebase/firestore";
+import {calculateScore} from "../../user/score/[uid]/route";
+import {collection, getDocs, setDoc, updateDoc} from "firebase/firestore"
 
-export async function GET() {
+async function updateOdds(){
     try {
         const url = `https://api.the-odds-api.com/v4/sports/soccer_epl/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet`
 
@@ -36,6 +40,30 @@ export async function GET() {
             { status: 500 },
         );
     }
+}
+
+async function updateUserPoints(){
+    const querySnapshot = await getDocs(collection(db, "users"));
+
+    const promises = querySnapshot.docs.map(async (doc) => {
+        const user = await fetchUserData(doc.id);
+        const response = await calculateScore(user.picks);
+        const docRef = doc(db, 'users', doc.id);
+        const data = doc.data();
+        const weekPoints = data.weekPoints;
+        await updateDoc(docRef, {
+            weekPoints: weekPoints + response
+        });
+    });
+
+    await Promise.all(promises);
+}
+
+export async function GET() {
+    updateOdds()
+        .then(() => {
+            updateUserPoints();
+        })
 }
 
 //const date = getLastWednesdayAndNextWeek();

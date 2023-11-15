@@ -20,7 +20,7 @@ export default function PicksForm({ data }){
 
 
 
-    const [payload, setPayload] = useState({});
+    const [payload, setPayload] = useState([]);
     const [total, setTotal] = useState({
         id: "",
         choice: ""
@@ -37,7 +37,12 @@ export default function PicksForm({ data }){
             const firestore = getFirestore(firebase_app);
             const userDocRef = doc(firestore, "users", user.uid);
             try {
-                const picks = [payload, total, double]
+                const picks = {
+                    games : payload,
+                    double: double,
+                    shield: shield,
+                    total: total,
+                }
                     await updateDoc(userDocRef, {picks: picks});
             } catch (error) {
                 console.error("Error fetching user document:", error);
