@@ -2,9 +2,8 @@ import { NextResponse } from 'next/server';
 import * as fs from "fs";
 import {findGameId} from "../../../../functions/GamesDB";
 import {fetchUserData} from "../../../../functions/fetchUserData";
-import * as db from "@firebase/firestore";
 import {calculateScore} from "../../user/score/[uid]/route";
-import {collection, getDocs, updateDoc} from "firebase/firestore"
+import {collection, getDocs, getFirestore, updateDoc} from "firebase/firestore"
 
 async function updateOdds(){
         const url = `https://api.the-odds-api.com/v4/sports/soccer_epl/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet`
@@ -29,15 +28,15 @@ async function updateOdds(){
 }
 
 async function updateUserPoints(){
+    const db = getFirestore();
     const querySnapshot = await getDocs(collection(db, "users"));
 
     const promises = querySnapshot.docs.map(async (doc) => {
         const user = await fetchUserData(doc.id);
         const response = await calculateScore(user.picks);
-        const docRef = doc(db, 'users', doc.id);
         const data = doc.data();
         const weekPoints = data.weekPoints;
-        await updateDoc(docRef, {
+        await updateDoc(doc.ref, {
             weekPoints: weekPoints + response
         });
     });
@@ -47,14 +46,12 @@ async function updateUserPoints(){
 
 export async function GET() {
     try{
-        updateOdds()
-            .then(() => {
-                updateUserPoints();
-                return NextResponse.json(
-                    { message: `updated data.json` },
-                    { status: 200 },
-                );
-            })
+        await updateUserPoints();
+        await updateOdds();
+        return NextResponse.json(
+            { message: `updated data.json` },
+            { status: 200 },
+        )
     } catch (error) {
         console.error('Error:', error);
         return NextResponse.json(
