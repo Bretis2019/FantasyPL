@@ -7,7 +7,6 @@ import {calculateScore} from "../../user/score/[uid]/route";
 import {collection, getDocs, updateDoc} from "firebase/firestore"
 
 async function updateOdds(){
-    try {
         const url = `https://api.the-odds-api.com/v4/sports/soccer_epl/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet`
 
         const response = await fetch(url);
@@ -27,19 +26,6 @@ async function updateOdds(){
                 console.log('File written successfully');
             }
         });
-
-
-        return NextResponse.json(
-            { message: `updated data.json` },
-            { status: 200 },
-        );
-    } catch (error) {
-        console.error('Error:', error);
-        return NextResponse.json(
-            { error: 'Failed to update data.json' },
-            { status: 500 },
-        );
-    }
 }
 
 async function updateUserPoints(){
@@ -60,10 +46,22 @@ async function updateUserPoints(){
 }
 
 export async function GET() {
-    updateOdds()
-        .then(() => {
-            updateUserPoints();
-        })
+    try{
+        updateOdds()
+            .then(() => {
+                updateUserPoints();
+                return NextResponse.json(
+                    { message: `updated data.json` },
+                    { status: 200 },
+                );
+            })
+    } catch (error) {
+        console.error('Error:', error);
+        return NextResponse.json(
+            { error: 'Failed to update data.json' },
+            { status: 500 },
+        );
+    }
 }
 
 //const date = getLastWednesdayAndNextWeek();
