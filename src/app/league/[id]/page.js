@@ -19,12 +19,13 @@ export default async function Page({params}){
 
     async function getPlayerScore(id) {
         try {
-            const response = await fetch(`http://localhost:3000/api/user/score/${id}`);
+            const response = await fetch(`${process.env.NEXT_ODDS_DOMAIN}/api/user/score/${id}`);
             return await response.json();
         } catch (err) {
             console.log(err);
         }
     }
+
 
 
     const elements = players.map( async (player) => {
