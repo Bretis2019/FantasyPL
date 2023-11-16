@@ -57,7 +57,7 @@ function Page(){
             {userData.picks ? (
                 <div className={"bg-gradient-to-b from-green-300 via-blue-500 to-purple-600 h-fit min-h-screen flex flex-col items-center p-8 gap-y-3"}>
                     <div className={"Card flex justify-center items-center p-2 font-semibold text-black text-3xl"}>{userData.username}</div>
-                    <div className={"Card flex justify-center items-center p-8 gap-x-4 font-bold text-black text-5xl"}>
+                    <div className={"Card flex justify-center items-center p-8 gap-x-4 font-bold text-black text-4xl md:text-5xl"}>
                         <div className={"Card p-4 flex flex-col gap-y-2 justify-center items-center"}>
                             <div>{userData.league === "" ? "-" : getLeaguePosition(userData.league, user.uid)}</div>
                             <div className={"text-base"}>League</div>
@@ -68,7 +68,7 @@ function Page(){
                         </div>
                         <div className={"Card p-4 flex flex-col gap-y-2 justify-center items-center"}>
                             <div>{userData.totalPoints}</div>
-                            <div className={"text-base"}>Total Points</div>
+                            <div className={"text-base text-center"}>Total</div>
                         </div>
                     </div>
                     <PicksDisplay picks={userData.picks} />
