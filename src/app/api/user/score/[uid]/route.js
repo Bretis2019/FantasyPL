@@ -2,7 +2,7 @@ import {fetchUserData} from "../../../../../functions/fetchUserData";
 import fs from "fs";
 import {getGameScore} from "../../../../../functions/getMatchScore";
 
-export function findGameById(gameId, data) {
+function findGameById(gameId, data) {
     for(const game of data){
         if(game.id === gameId){
             return game;

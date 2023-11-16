@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { getDoc, doc, getFirestore } from "firebase/firestore";
 import firebase_app from "@/firebase/config";
+import PicksDisplay from "../../components/PicksDisplay";
 
 function Page(){
     const { user } = useAuthContext();
@@ -50,8 +51,15 @@ function Page(){
     return (
         <>
             {userData.picks ? (
-                <div>
-                    <h1>Welcome, {userData.username}! You have {score} point this week</h1>
+                <div className={"bg-gradient-to-b from-green-300 via-blue-500 to-purple-600 h-fit min-h-screen flex flex-col items-center p-8 gap-y-3"}>
+                    <div className={"Card flex justify-center items-center p-2 font-semibold text-black text-3xl"}>{userData.username}</div>
+                    <div className={"Card flex justify-center items-center p-8 font-bold text-black text-5xl"}>
+                        <div className={"Card p-4 flex flex-col gap-y-2 justify-center items-center"}>
+                            <div>{score}</div>
+                            <div className={"text-base"}>Points</div>
+                        </div>
+                    </div>
+                    <PicksDisplay picks={userData.picks} />
                 </div>
             ) : (
                 <h1>Loading user data...</h1>
