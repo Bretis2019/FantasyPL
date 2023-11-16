@@ -35,9 +35,9 @@ async function updateUserPoints(){
         const user = await fetchUserData(doc.id);
         const response = await calculateScore(user.picks);
         const data = doc.data();
-        const weekPoints = data.weekPoints;
+        const totalPoints = data.totalPoints;
         await updateDoc(doc.ref, {
-            weekPoints: weekPoints + response
+            totalPoints: totalPoints + response
         });
     });
 
