@@ -45,7 +45,7 @@ export default function PicksCard( props ){
                     <img className={"h-[60px] w-auto object-contain"} src={`Badges/${item.home_team}.png`} alt={"Club badge"} />
                     <div className={"w-[150px] text-center"}>{item.home_team}</div>
                 </div>
-                <div onClick={getMatchDeatails} className={`flex text-transparent bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-6xl font-semibold justify-between ${handicap.name === item.home_team ? '' : ' flex-row-reverse'}`}>
+                <div onClick={getMatchDeatails} className={`flex text-transparent bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-3xl md:text-6xl font-semibold justify-between ${handicap.name === item.home_team ? '' : ' flex-row-reverse'}`}>
                     <div>{handicap.point}</div>
                     <div>-</div>
                     <div>0</div>

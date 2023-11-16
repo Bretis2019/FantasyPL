@@ -17,7 +17,7 @@ export default async function signUp(email: string, password: string) {
 
     // Add user data to Firestore
     const userDocRef = doc(db, "users", result.user.uid); // Assume "users" is the collection name
-    await setDoc(userDocRef, { userId: result.user.uid, email: email, totalPoints: 0, weekPoints:0, username: "", friends: [], leagues: [], picks: [] });
+    await setDoc(userDocRef, { userId: result.user.uid, email: email, totalPoints: 0,league: "" , username: "", friends: [], leagues: [], picks: [] });
   } catch (e) {
     error = e; // Catch and store any error that occurs during sign-up
   }

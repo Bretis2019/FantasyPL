@@ -1,6 +1,6 @@
 "use client"
 import DisplayCard from "./DisplayCard";
-import {useState} from "react";
+import { useState, useEffect } from "react";
 
 function findGameById(gameId, data) {
     for(const game of data){
@@ -18,11 +18,24 @@ export default function PicksDisplay(props) {
     const shield = picks.shield;
     const total = picks.total;
     const [data, setData] = useState([]);
-    fetch("/api/data")
-        .then(response => response.json())
-        .then(res => {
-            setData(res);
-        })
+
+    async function fetchData() {
+        try {
+            const response = await fetch("/api/data");
+            if (!response.ok) {
+                console.log(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            setData(data);
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     if(games && data.length > 0) {
         const elements =  games.map((game) => {
             const [id, pick] = Object.entries(game)[0];
