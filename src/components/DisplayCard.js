@@ -12,7 +12,7 @@ export default function DisplayCard( props){
             <div className={"flex md:w-full w-[85svw] justify-between items-center"}>
                 <div className={"flex flex-col justify-center items-center gap-y-2"}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img className={"h-[60px] w-[60px] md:auto object-contain"} src={`Badges/${item.home_team}.png`} alt={"Club badge"} />
+                    <img className={"h-[60px] w-[60px] md:auto object-contain"} src={`/Badges/${item.home_team}.png`} alt={"Club badge"} />
                     <div className={"md:w-[150px] max-w-[120px] text-center"}>{item.home_team}</div>
                 </div>
                 <div className={`flex text-transparent bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-3xl md:text-6xl font-semibold justify-between ${handicap.name === item.home_team ? '' : ' flex-row-reverse'}`}>
@@ -22,7 +22,7 @@ export default function DisplayCard( props){
                 </div>
                 <div className={"flex flex-col justify-center items-center gap-y-2"}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img className={"h-[60px] w-[60px] md:w-auto object-contain"} src={`Badges/${item.away_team}.png`} alt={"Club badge"} />
+                    <img className={"h-[60px] w-[60px] md:w-auto object-contain"} src={`/Badges/${item.away_team}.png`} alt={"Club badge"} />
                     <div className={"md:w-[150px] max-w-[120px] text-center"}>{item.away_team}</div>
                 </div>
             </div>
