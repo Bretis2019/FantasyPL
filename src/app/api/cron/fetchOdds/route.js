@@ -68,8 +68,8 @@ async function updateUserPoints(){
             const data = doc.data();
             const totalPoints = data.totalPoints;
             await updateDoc(doc.ref, {
-                totalPoints: totalPoints + response,
-                picks: {}
+                picks: {},
+                totalPoints: totalPoints + response
             });
         } catch (error) {
             console.error(`Error processing doc.id: ${doc.id}`, error);

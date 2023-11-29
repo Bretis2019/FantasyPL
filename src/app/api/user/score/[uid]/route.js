@@ -98,6 +98,9 @@ export async function calculateScore(picks){
 export async function GET(request, { params }) {
     const { uid } = params;
     const user = await fetchUserData(uid);
+    if(user.picks.double === undefined){
+        return new Response(0);
+    }
     const response = await calculateScore(user.picks);
     return new Response(response);
 }

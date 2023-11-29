@@ -123,7 +123,14 @@ function Page(){
                             <div className={"text-base text-center"}>Total</div>
                         </div>
                     </div>
-                    <PicksDisplay picks={userData.picks} />
+                    {
+                        userData.picks.double !== undefined ? <PicksDisplay picks={userData.picks} /> :
+                            <Link href={"/picks"}>
+                                <div className={"bg-green-500 rounded-md px-4 py-2 text-xl text-black flex justify-center items-center font-semibold"}>
+                                    Set picks
+                                </div>
+                            </Link>
+                    }
                 </div>
             ) : (
                 <h1>Loading user data...</h1>
