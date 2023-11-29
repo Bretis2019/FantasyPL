@@ -61,17 +61,24 @@ export async function calculateScore(picks){
         }
 
         if(total.id === id){
-            if(gameData.bookmakers[0].markets[1].outcomes[0].point > (liveScore[0] + liveScore[1]) && total.choice === "Over"){
-                userScore += gameData.bookmakers[0].markets[1].outcomes[0].price * 100;
-            }
-            if(gameData.bookmakers[0].markets[1].outcomes[0].point > (liveScore[0] + liveScore[1]) && total.choice === "Under"){
-                userScore -= 100;
-            }
-            if(gameData.bookmakers[0].markets[1].outcomes[1].point < (liveScore[0] + liveScore[1]) && total.choice === "Under"){
-                userScore += gameData.bookmakers[0].markets[1].outcomes[1].price * 100;
-            }
-            if(gameData.bookmakers[0].markets[1].outcomes[1].point < (liveScore[0] + liveScore[1]) && total.choice === "Over"){
-                userScore -= 100;
+
+            const overUnder = gameData.bookmakers[0].markets[1].outcomes[0].point
+            const matchScore = liveScore[0] + liveScore[1]
+            const overPrice = gameData.bookmakers[0].markets[1].outcomes[0].price * 100;
+            const underPrice = gameData.bookmakers[0].markets[1].outcomes[1].price * 100;
+
+            if(total.choice === "Over"){
+                if(overUnder > matchScore){
+                    userScore -= 100;
+                }else{
+                    userScore += overPrice;
+                }
+            }else{
+                if(overUnder < matchScore){
+                    userScore -= 100;
+                }else{
+                    userScore += underPrice;
+                }
             }
         }
 
@@ -84,9 +91,8 @@ export async function calculateScore(picks){
         }else if(pointScore[0] < pointScore[1] && pick === 0){
             userScore -= cost;
         }
-        console.log(userScore)
     }
-    return userScore;
+    return userScore.toFixed(2);
 }
 
 export async function GET(request, { params }) {
