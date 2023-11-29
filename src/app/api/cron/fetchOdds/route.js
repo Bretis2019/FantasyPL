@@ -31,16 +31,21 @@ function getWednesdays() {
 
 async function updateOdds(){
     const wednesdays  = getWednesdays();
+    console.log(wednesdays);
     const url = `https://api.the-odds-api.com/v4/sports/soccer_epl/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet&commenceTimeFrom=${wednesdays.thisWednesday}&commenceTimeTo=${wednesdays.nextWednesday}`
 
     const response = await fetch(url);
 
     const data = await response.json();
 
+    console.log(data)
+
     const payload = data.map(item => ({
         ...item, // Spread the existing properties of the object
         liveCode: findGameId(item.home_team, item.away_team),
     }));
+
+    console.log(payload)
 
 
     await fs.writeFile("data.json", JSON.stringify(payload, null, 2), (err) => {
