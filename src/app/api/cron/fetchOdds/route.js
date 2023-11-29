@@ -5,26 +5,48 @@ import {fetchUserData} from "../../../../functions/fetchUserData";
 import {calculateScore} from "../../user/score/[uid]/route";
 import {collection, getDocs, getFirestore, updateDoc} from "firebase/firestore"
 
+function getLastWednesdayAndNextWeek() {
+    const today = new Date();
+    const currentDayOfWeek = today.getDay();
+    const daysUntilLastWednesday = (currentDayOfWeek + 7 - 3) % 7; // Calculate days until last Wednesday
+
+    const lastWednesday = new Date(today);
+    lastWednesday.setDate(today.getDate() - daysUntilLastWednesday);
+
+    const nextWeek = new Date(lastWednesday);
+    nextWeek.setDate(lastWednesday.getDate() + 7);
+
+    // Format dates to YYYY-MM-DDTHH:MM:SSZ format
+    const isoLastWednesday = lastWednesday.toISOString().slice(0, 19) + 'Z';
+    const isoNextWeek = nextWeek.toISOString().slice(0, 19) + 'Z';
+
+    return {
+        beginDate: isoLastWednesday,
+        endDate: isoNextWeek,
+    };
+}
+
 async function updateOdds(){
-        const url = `https://api.the-odds-api.com/v4/sports/soccer_epl/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet`
+    const date = getLastWednesdayAndNextWeek();
+    const url = `https://api.the-odds-api.com/v4/sports/soccer_epl/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet&commenceTimeFrom=${date.beginDate}&commenceTimeTo=${date.endDate}`
 
-        const response = await fetch(url);
+    const response = await fetch(url);
 
-        const data = await response.json();
+    const data = await response.json();
 
-        const payload = data.map(item => ({
-            ...item, // Spread the existing properties of the object
-            liveCode: findGameId(item.home_team, item.away_team),
-        }));
+    const payload = data.map(item => ({
+        ...item, // Spread the existing properties of the object
+        liveCode: findGameId(item.home_team, item.away_team),
+    }));
 
 
-        await fs.writeFile("data.json", JSON.stringify(payload, null, 2), (err) => {
-            if (err) {
-                console.error('Error writing to file:', err);
-            } else {
-                console.log('File written successfully');
-            }
-        });
+    await fs.writeFile("data.json", JSON.stringify(payload, null, 2), (err) => {
+        if (err) {
+            console.error('Error writing to file:', err);
+        } else {
+            console.log('File written successfully');
+        }
+    });
 }
 
 async function updateUserPoints(){
@@ -61,26 +83,4 @@ export async function GET() {
     }
 }
 
-//const date = getLastWednesdayAndNextWeek();
 
-
-/*function getLastWednesdayAndNextWeek() {
-    const today = new Date();
-    const currentDayOfWeek = today.getDay();
-    const daysUntilLastWednesday = (currentDayOfWeek + 7 - 3) % 7; // Calculate days until last Wednesday
-
-    const lastWednesday = new Date(today);
-    lastWednesday.setDate(today.getDate() - daysUntilLastWednesday);
-
-    const nextWeek = new Date(lastWednesday);
-    nextWeek.setDate(lastWednesday.getDate() + 7);
-
-    // Format dates to YYYY-MM-DDTHH:MM:SSZ format
-    const isoLastWednesday = lastWednesday.toISOString().slice(0, 19) + 'Z';
-    const isoNextWeek = nextWeek.toISOString().slice(0, 19) + 'Z';
-
-    return {
-        beginDate: isoLastWednesday,
-        endDate: isoNextWeek,
-    };
-}*/
