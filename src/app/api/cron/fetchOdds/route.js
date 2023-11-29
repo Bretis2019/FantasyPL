@@ -5,30 +5,33 @@ import {fetchUserData} from "../../../../functions/fetchUserData";
 import {calculateScore} from "../../user/score/[uid]/route";
 import {collection, getDocs, getFirestore, updateDoc} from "firebase/firestore"
 
-function getLastWednesdayAndNextWeek() {
+function getWednesdays() {
     const today = new Date();
-    const currentDayOfWeek = today.getDay();
-    const daysUntilLastWednesday = (currentDayOfWeek + 7 - 3) % 7; // Calculate days until last Wednesday
+    const currentDay = today.getDay();
 
-    const lastWednesday = new Date(today);
-    lastWednesday.setDate(today.getDate() - daysUntilLastWednesday);
+    // Calculate the difference between today and Wednesday (3rd day of the week)
+    const daysUntilNextWednesday = currentDay <= 3 ? 3 - currentDay : 10 - currentDay;
 
-    const nextWeek = new Date(lastWednesday);
-    nextWeek.setDate(lastWednesday.getDate() + 7);
+    // Calculate this week's Wednesday
+    const thisWednesday = new Date(today);
+    thisWednesday.setDate(today.getDate() + daysUntilNextWednesday);
+    thisWednesday.setUTCHours(0, 0, 0, 0);
 
-    // Format dates to YYYY-MM-DDTHH:MM:SSZ format
-    const isoLastWednesday = lastWednesday.toISOString().slice(0, 19) + 'Z';
-    const isoNextWeek = nextWeek.toISOString().slice(0, 19) + 'Z';
+    // Calculate next week's Wednesday
+    const nextWednesday = new Date(thisWednesday);
+    nextWednesday.setDate(thisWednesday.getDate() + 7);
+
+    const formatISO8601 = (date) => date.toISOString().slice(0, 19) + "Z";
 
     return {
-        beginDate: isoLastWednesday,
-        endDate: isoNextWeek,
+        thisWednesday: formatISO8601(thisWednesday),
+        nextWednesday: formatISO8601(nextWednesday)
     };
 }
 
 async function updateOdds(){
-    const date = getLastWednesdayAndNextWeek();
-    const url = `https://api.the-odds-api.com/v4/sports/soccer_epl/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet&commenceTimeFrom=${date.beginDate}&commenceTimeTo=${date.endDate}`
+    const wednesdays  = getWednesdays();
+    const url = `https://api.the-odds-api.com/v4/sports/soccer_epl/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet&commenceTimeFrom=${wednesdays.thisWednesday}&commenceTimeTo=${wednesdays.nextWednesday}`
 
     const response = await fetch(url);
 
