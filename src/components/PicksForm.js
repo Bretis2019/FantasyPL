@@ -52,7 +52,7 @@ export default function PicksForm({ data }){
     };
 
 
-    const elements = data.map((item, index) => {
+    const elements = data.slice(0,10).map((item, index) => {
         return (
             <PicksCard item={item} key={index} updatePayload={setPayload} updateTotal={setTotal} total={total} updateDouble={setDouble} double={double} updateShield={setShield} shield={shield}/>
         )
