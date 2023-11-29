@@ -49,6 +49,8 @@ export async function calculateScore(picks){
         const spread = calculateStartingScore(gameData);
         const pointScore = [liveScore[0] + spread[0], liveScore[1] + spread[1]];
 
+
+
         if(double === id){
             homePoints = homePoints * 2;
             awayPoints = homePoints * 2;
@@ -83,6 +85,7 @@ export async function calculateScore(picks){
         }else if(pointScore[0] < pointScore[1] && pick === 0){
             userScore -= cost;
         }
+        console.log(userScore)
     }
     return userScore;
 }
