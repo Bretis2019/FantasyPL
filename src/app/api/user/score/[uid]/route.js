@@ -1,5 +1,4 @@
 import {fetchUserData} from "../../../../../functions/fetchUserData";
-import fs from "fs";
 import {getGameScore} from "../../../../../functions/getMatchScore";
 
 function findGameById(gameId, data) {
@@ -32,8 +31,8 @@ function calculateStartingScore(game) {
 }
 
 export async function calculateScore(picks){
-    const readFileData = await fs.promises.readFile('data.json', 'utf-8');
-    const data = JSON.parse(readFileData);
+    const response = await fetch("https://fantasy-pl.vercel.app/api/data");
+    const data = await response.json();
     const games = picks.games;
     const double = picks.double.id;
     const shield = picks.shield.id;

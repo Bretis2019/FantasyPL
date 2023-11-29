@@ -31,22 +31,31 @@ export default async function Page({params}){
 
 
 
-    const elements = players.map( async (player) => {
+    const elements = await Promise.all(players.map(async (player) => {
         const playerData = await findPlayerById(player);
         const playerScore = await getPlayerScore(player);
-        return (
-            <Link href={`/home/${player}`} key={player}>
-                <div className={"flex justify-between w-[100svw] text-2xl"} >
-                    <div>{playerData.username}</div>
-                    <div>{playerScore}</div>
-                </div>
-            </Link>
-        )
-    })
+        return {
+            player,
+            username: playerData.username,
+            score: playerScore
+        };
+    }));
+
+// Sort the elements by playerScore in descending order
+    elements.sort((a, b) => b.score - a.score);
+
+    const sortedElements = elements.map(({ player, username, score }) => (
+        <Link href={`/home/${player}`} key={player}>
+            <div className={"flex justify-between w-[100svw] text-2xl"}>
+                <div>{username}</div>
+                <div>{score}</div>
+            </div>
+        </Link>
+    ));
 
     return (
         <div>
-            {elements}
+            {sortedElements}
         </div>
     )
 
