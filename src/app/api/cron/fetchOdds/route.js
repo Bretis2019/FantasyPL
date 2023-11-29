@@ -31,21 +31,16 @@ function getWednesdays() {
 
 async function updateOdds(){
     const wednesdays  = getWednesdays();
-    console.log(wednesdays);
     const url = `https://api.the-odds-api.com/v4/sports/soccer_epl/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet&commenceTimeFrom=${wednesdays.thisWednesday}&commenceTimeTo=${wednesdays.nextWednesday}`
 
     const response = await fetch(url);
 
     const data = await response.json();
 
-    console.log(data)
-
     const payload = data.map(item => ({
         ...item, // Spread the existing properties of the object
         liveCode: findGameId(item.home_team, item.away_team),
     }));
-
-    console.log(payload)
 
 
     await fs.writeFile("data.json", JSON.stringify(payload, null, 2), (err) => {
@@ -62,16 +57,26 @@ async function updateUserPoints(){
     const querySnapshot = await getDocs(collection(db, "users"));
 
     const promises = querySnapshot.docs.map(async (doc) => {
-        const user = await fetchUserData(doc.id);
-        const response = await calculateScore(user.picks);
-        const data = doc.data();
-        const totalPoints = data.totalPoints;
-        await updateDoc(doc.ref, {
-            totalPoints: totalPoints + response
-        });
+        try {
+            const user = await fetchUserData(doc.id);
+            if (!user || typeof user !== 'object' || !user.userId) {
+                console.error(`Invalid user data for doc.id: ${doc.id}`, user);
+                return;
+            }
+
+            const response = await calculateScore(user.picks);
+            const data = doc.data();
+            const totalPoints = data.totalPoints;
+            await updateDoc(doc.ref, {
+                totalPoints: totalPoints + response
+            });
+        } catch (error) {
+            console.error(`Error processing doc.id: ${doc.id}`, error);
+        }
     });
 
     await Promise.all(promises);
+
 }
 
 export async function GET() {
