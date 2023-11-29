@@ -92,7 +92,7 @@ export async function calculateScore(picks){
             userScore -= cost;
         }
     }
-    return userScore.toFixed(2);
+    return parseInt(userScore.toFixed(2))
 }
 
 export async function GET(request, { params }) {
