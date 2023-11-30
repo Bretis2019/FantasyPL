@@ -37,24 +37,31 @@ export default async function Page({params}){
         return {
             player,
             username: playerData.username,
+            totalScore: playerData.totalPoints,
             score: playerScore
         };
     }));
 
 // Sort the elements by playerScore in descending order
-    elements.sort((a, b) => b.score - a.score);
+    elements.sort((a, b) => b.totalScore - a.totalScore);
 
-    const sortedElements = elements.map(({ player, username, score }) => (
+    const sortedElements = elements.map(({ player, username, score, totalScore }) => (
         <Link href={`/home/${player}`} key={player}>
-            <div className={"flex justify-between w-[100svw] text-2xl"}>
+            <div className={"flex justify-between w-[100svw] text-2xl px-8"}>
                 <div>{username}</div>
                 <div>{score}</div>
+                <div>{totalScore}</div>
             </div>
         </Link>
     ));
 
     return (
-        <div>
+        <div className={"flex flex-col space-y-8"}>
+            <div className={"flex justify-between w-[100svw] text-2xl px-8"}>
+                <div>Username</div>
+                <div>Gw score</div>
+                <div>Total score</div>
+            </div>
             {sortedElements}
         </div>
     )

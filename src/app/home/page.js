@@ -26,36 +26,8 @@ function Page(){
     const [userData, setUserData] = useState({});
     const [leaguePos, setLeaguePos] = useState(2);
     const firestore = getFirestore(firebase_app);
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (user != null) {
-                const userDocRef = doc(firestore, "users", user.uid);
 
-                try {
-                    const userDocSnap = await getDoc(userDocRef);
-
-                    if (userDocSnap.exists()) {
-                        const userData = await userDocSnap.data();
-                        setUserData(userData);
-                        return userData;
-                    } else {
-                        console.error("User document not found");
-                    }
-                } catch (error) {
-                    console.error("Error fetching user document:", error);
-                }
-            }
-        };
-
-        fetchUserData().then(response => {
-            if(response.league){
-                getLeaguePosition(response.league, user.uid)
-            }
-        })
-
-
-    }, [firestore, user]);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     async function getLeaguePosition(leagueCode, id){
 
         async function fetchScore(id) {
@@ -104,16 +76,48 @@ function Page(){
         return 2;
     }
 
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if (user != null) {
+                const userDocRef = doc(firestore, "users", user.uid);
+
+                try {
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userData = await userDocSnap.data();
+                        setUserData(userData);
+                        return userData;
+                    } else {
+                        console.error("User document not found");
+                    }
+                } catch (error) {
+                    console.error("Error fetching user document:", error);
+                }
+            }
+        };
+
+        fetchUserData().then(response => {
+            if(response.league){
+                getLeaguePosition(response.league, user.uid)
+            }
+        })
+
+
+    }, [firestore, getLeaguePosition, user]);
+
     return (
         <>
             {userData.picks ? (
                 <div className={"bg-gradient-to-b from-green-300 via-blue-500 to-purple-600 h-fit min-h-screen flex flex-col items-center p-8 gap-y-3"}>
                     <div className={"Card flex justify-center items-center p-2 font-semibold text-black text-3xl"}>{userData.username}</div>
                     <div className={"Card flex justify-center items-center p-8 gap-x-4 font-bold text-black text-4xl md:text-5xl"}>
-                        <div className={"Card p-4 flex flex-col gap-y-2 justify-center items-center"}>
-                            <Link href={userData.league === "" ? "/league" : `/league/${userData.league}`}><div>{userData.league === "" ? "-" : leaguePos}</div></Link>
-                            <div className={"text-base"}>League</div>
-                        </div>
+                        <Link href={userData.league === "" ? "/league" : `/league/${userData.league}`}>
+                            <div className={"Card p-4 flex flex-col gap-y-2 justify-center items-center"}>
+                                <div>{userData.league === "" ? "-" : leaguePos}</div>
+                                <div className={"text-base"}>League</div>
+                            </div>
+                        </Link>
                         <div className={"Card p-4 flex flex-col gap-y-2 justify-center items-center"}>
                             <div>{score}</div>
                             <div className={"text-base"}>Points</div>
@@ -124,7 +128,16 @@ function Page(){
                         </div>
                     </div>
                     {
-                        userData.picks.double !== undefined ? <PicksDisplay picks={userData.picks} /> :
+                        userData.picks.double !== undefined ?
+                            <div className={"flex flex-col gap-y-3"}>
+                                <Link href={"/picks"}>
+                                    <div className={"bg-green-500 rounded-md px-4 py-2 text-xl text-black flex justify-center items-center font-semibold"}>
+                                        Edit picks
+                                    </div>
+                                </Link>
+                                <PicksDisplay picks={userData.picks} />
+                            </div>
+                                :
                             <Link href={"/picks"}>
                                 <div className={"bg-green-500 rounded-md px-4 py-2 text-xl text-black flex justify-center items-center font-semibold"}>
                                     Set picks

@@ -1,6 +1,6 @@
 "use client"
 import DisplayCard from "./DisplayCard";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 function findGameById(gameId, data) {
     for(const game of data){
