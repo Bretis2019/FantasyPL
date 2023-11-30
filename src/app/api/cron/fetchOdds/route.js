@@ -31,7 +31,7 @@ function getWednesdays() {
 
 async function updateOdds(){
     const wednesdays  = getWednesdays();
-    const url = `https://api.the-odds-api.com/v4/sports/soccer_epl/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet&commenceTimeFrom=${wednesdays.thisWednesday}&commenceTimeTo=${wednesdays.nextWednesday}`
+    const url = `https://api.the-odds-api.com/v4/sports/soccer_epl/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet`
 
     const response = await fetch(url);
 
