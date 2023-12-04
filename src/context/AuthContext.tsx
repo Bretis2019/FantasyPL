@@ -21,6 +21,15 @@ export function AuthContextProvider( { children }: AuthContextProviderProps ): J
   const [ user, setUser ] = useState<User | null>( null );
   const [ loading, setLoading ] = useState( true );
 
+  const logout = async () => {
+    try {
+      // Sign out the user
+      await auth.signOut();
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   useEffect( () => {
     // Subscribe to the authentication state changes
     const unsubscribe = onAuthStateChanged( auth, ( user ) => {
@@ -41,7 +50,7 @@ export function AuthContextProvider( { children }: AuthContextProviderProps ): J
 
   // Provide the authentication context to child components
   return (
-    <AuthContext.Provider value={{ user }}>
+    <AuthContext.Provider value={{ user, logout }}>
       {loading ? <div>Loading...</div> : children}
     </AuthContext.Provider>
   );

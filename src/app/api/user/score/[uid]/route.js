@@ -1,12 +1,13 @@
 import {fetchUserData} from "../../../../../functions/fetchUserData";
 import {getGameScore} from "../../../../../functions/getMatchScore";
 
-function findGameById(gameId, data) {
-    for(const game of data){
-        if(game.id === gameId){
-            return game;
+function findGameById(id, data) {
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].id === id) {
+            return data[i];
         }
     }
+    console.log("Game not found")
     return null;
 }
 
@@ -31,8 +32,12 @@ function calculateStartingScore(game) {
 }
 
 export async function calculateScore(picks){
-    const response = await fetch("https://fantasy-pl.vercel.app/api/data");
-    const data = await response.json();
+    const requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+    const result  = await fetch("https://fantasy-pl.vercel.app/api/data", requestOptions);
+    const data = await result.json();
     const games = picks.games;
     const double = picks.double.id;
     const shield = picks.shield.id;

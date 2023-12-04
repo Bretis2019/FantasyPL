@@ -1,6 +1,15 @@
+"use client"
 import Link from 'next/link';
+import {useRouter} from "next/navigation";
+import {useAuthContext} from "@/context/AuthContext";
 
 export default function Home() {
+    const { user } = useAuthContext();
+    const router = useRouter();
+
+    if(user){
+        router.push("/home")
+    }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between overflow-x-hidden">
