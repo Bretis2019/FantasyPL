@@ -38,17 +38,20 @@ export default async function Page({params}){
             player,
             username: playerData.username,
             totalScore: playerData.totalPoints,
-            score: playerScore
+            score: typeof playerScore === 'number' ? playerScore : 0
         };
     }));
 
 // Sort the elements by playerScore in descending order
     elements.sort((a, b) => b.totalScore - a.totalScore);
 
-    const sortedElements = elements.map(({ player, username, score, totalScore }) => (
+    const sortedElements = elements.map(({ player, username, score, totalScore }, index) => (
         <Link href={`/home/${player}`} key={player}>
-            <div className={"flex justify-between w-[100svw] text-2xl px-8"}>
-                <div>{username}</div>
+            <div className={"flex justify-between items-center w-[100svw] text-2xl py-4 px-2 Card"}>
+                <div className={"flex space-x-2"}>
+                    <div>{index + 1}</div>
+                    <div>{username}</div>
+                </div>
                 <div>{score}</div>
                 <div>{totalScore}</div>
             </div>
@@ -56,11 +59,11 @@ export default async function Page({params}){
     ));
 
     return (
-        <div className={"flex flex-col space-y-8"}>
-            <div className={"flex justify-between w-[100svw] text-2xl px-8"}>
-                <div>Username</div>
-                <div>Gw score</div>
-                <div>Total score</div>
+        <div className={"flex flex-col space-y-8 bg-gradient-to-b from-pink-300 via-purple-300 to-indigo-400 w-[100svw] h-[100svh] text-black"}>
+            <div className={"flex justify-between items-center w-[100svw] text-2xl px-2 md:px-8 py-4 border-b-2 border-black"}>
+                <div>Name</div>
+                <div>GW</div>
+                <div>Total</div>
             </div>
             {sortedElements}
         </div>
