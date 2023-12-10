@@ -7,7 +7,7 @@ function findGameById(id, data) {
             return data[i];
         }
     }
-    console.log("Game not found")
+    console.log("Game not found id:", id)
     return null;
 }
 
@@ -34,7 +34,8 @@ function calculateStartingScore(game) {
 export async function calculateScore(picks){
     const requestOptions = {
         method: 'GET',
-        redirect: 'follow'
+        redirect: 'follow',
+        cache: 'no-store'
     };
     const result  = await fetch("https://fantasy-pl.vercel.app/api/data", requestOptions);
     const data = await result.json();
@@ -96,6 +97,7 @@ export async function calculateScore(picks){
         }else if(pointScore[0] < pointScore[1] && pick === 0){
             userScore -= cost;
         }
+        console.log(userScore)
     }
     return parseInt(userScore.toFixed(2))
 }
