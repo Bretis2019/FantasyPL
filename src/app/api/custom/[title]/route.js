@@ -19,8 +19,11 @@ export async function GET(request, { params }) {
         // Check if the response data has a non-empty items array
         const hasItems = Array.isArray(data.items) && data.items.length > 0;
 
-        // Return true if items array is not empty, otherwise return false
-        return new Response(hasItems);
+        const jsonResponse = new Response(hasItems);
+
+        jsonResponse.headers.set("Access-Control-Allow-Origin", "https://www.seek.co.nz");
+
+        return jsonResponse;
     } catch (error) {
         console.error('Error fetching data:', error);
         return new Response({ error: 'Error fetching data' });
