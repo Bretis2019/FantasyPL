@@ -6,7 +6,7 @@ import {calculateScore} from "../../user/score/[uid]/route";
 import {collection, getDocs, getFirestore, updateDoc} from "firebase/firestore"
 
 async function updateOdds(){
-    const url = `https://api.the-odds-api.com/v4/sports/soccer_epl/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet`
+    const url = `https://api.the-odds-api.com/v4/sports/soccer_uefa_european_championship/odds/?apiKey=${process.env.NEXT_ODDS_API_KEY}&regions=eu&markets=spreads,totals&oddsFormat=decimal&bookmakers=onexbet`
 
     const response = await fetch(url);
 
